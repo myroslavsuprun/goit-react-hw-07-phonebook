@@ -9,7 +9,6 @@ import {
   ContactsListStyled,
   ContactsItem,
   ContactsButton,
-  LoaderWrapper,
 } from './ContactsList.styled';
 
 function getContactsIfFiltered(contactsList, filter) {
@@ -50,16 +49,10 @@ const ContactsList = () => {
   );
 
   return (
-    <>
-      <ContactsListStyled>
-        {isLoading && (
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        )}
-        {!isLoading && !error && contacts.map(mapCallback)}
-      </ContactsListStyled>
-    </>
+    <ContactsListStyled>
+      {isLoading && <Loader />}
+      {!isLoading && !error && contacts.map(mapCallback)}
+    </ContactsListStyled>
   );
 };
 
