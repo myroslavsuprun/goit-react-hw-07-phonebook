@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// import { removeContact } from 'redux/contactsSlice';
 import { getContactsList, getFilter } from 'redux/selectors';
 import { fetchContacts, deleteContact } from 'redux/operations';
 
+import Loader from 'components/Loader/Loader';
 import {
   ContactsListStyled,
   ContactsItem,
   ContactsButton,
+  LoaderWrapper,
 } from './ContactsList.styled';
 
 function getContactsIfFiltered(contactsList, filter) {
@@ -24,7 +25,7 @@ function getContactsIfFiltered(contactsList, filter) {
 
 const ContactsList = () => {
   const dispatch = useDispatch();
-  let { contacts, isLoading } = useSelector(getContactsList);
+  let { contacts, isLoading, error } = useSelector(getContactsList);
   const filter = useSelector(getFilter);
 
   useEffect(() => {
@@ -50,9 +51,14 @@ const ContactsList = () => {
 
   return (
     <>
-      {!isLoading && (
-        <ContactsListStyled>{contacts.map(mapCallback)}</ContactsListStyled>
-      )}
+      <ContactsListStyled>
+        {isLoading && (
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
+        )}
+        {!isLoading && !error && contacts.map(mapCallback)}
+      </ContactsListStyled>
     </>
   );
 };
