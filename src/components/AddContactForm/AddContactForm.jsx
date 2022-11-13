@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { addContact } from 'redux/contactsSlice';
+import { addContact } from 'redux/operations';
 
 import {
   AddContactWrapper,
@@ -25,12 +24,12 @@ function AddContactForm() {
   const [name, setName] = useState(INITIAL_STATE.name);
   const [number, setNumber] = useState(INITIAL_STATE.number);
   const dispatch = useDispatch();
-  const { contactsList } = useSelector(getContactsList);
+  const { contacts } = useSelector(getContactsList);
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    const foundContact = contactsList.find(contactFromGlobalState => {
+    const foundContact = contacts.find(contactFromGlobalState => {
       const nameFromGlobalState = contactFromGlobalState.name.toLowerCase();
       return nameFromGlobalState === name.toLowerCase();
     });
@@ -40,7 +39,7 @@ function AddContactForm() {
       return alert(`${name} is already in contacts`);
     }
 
-    dispatch(addContact({ name, number }));
+    dispatch(addContact({ name, phone: number }));
 
     reset();
   };

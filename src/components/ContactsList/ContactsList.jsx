@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { removeContact } from 'redux/contactsSlice';
+// import { removeContact } from 'redux/contactsSlice';
 import { getContactsList, getFilter } from 'redux/selectors';
+import { fetchContacts, deleteContact } from 'redux/operations';
 
 import {
   ContactsListStyled,
@@ -23,18 +24,24 @@ function getContactsIfFiltered(contactsList, filter) {
 
 const ContactsList = () => {
   const dispatch = useDispatch();
-  let { contactsList } = useSelector(getContactsList);
+  let { contacts, isLoading } = useSelector(getContactsList);
   const filter = useSelector(getFilter);
 
-  contactsList = getContactsIfFiltered(contactsList, filter);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  contacts = getContactsIfFiltered(contacts, filter);
 
   const onDeleteBtnClick = id => {
-    dispatch(removeContact(id));
+    dispatch(deleteContact(id));
   };
 
-  const mapCallback = ({ name, number, id }) => (
+  const mapCallback = ({ name, phone, id }) => (
     <ContactsItem key={id}>
-      {name} {number}
+      {name}
+      <br />
+      {phone}
       <ContactsButton onClick={() => onDeleteBtnClick(id)}>
         Delete
       </ContactsButton>
@@ -42,7 +49,11 @@ const ContactsList = () => {
   );
 
   return (
-    <ContactsListStyled>{contactsList.map(mapCallback)}</ContactsListStyled>
+    <>
+      {!isLoading && (
+        <ContactsListStyled>{contacts.map(mapCallback)}</ContactsListStyled>
+      )}
+    </>
   );
 };
 
