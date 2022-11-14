@@ -2,7 +2,7 @@ import React from 'react';
 import { nanoid } from 'nanoid';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getFilter } from 'redux/selectors';
+import { selectFilter } from 'redux/selectors';
 import { updateFilter } from 'redux/filterSlice';
 
 import { FormLabel, FormInput } from './ContactsFilter.styled';
@@ -10,7 +10,7 @@ import { FormLabel, FormInput } from './ContactsFilter.styled';
 const filterInputId = nanoid();
 
 const ContactsFilter = () => {
-  const filter = useSelector(getFilter);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
 
   const onInputChange = e => {

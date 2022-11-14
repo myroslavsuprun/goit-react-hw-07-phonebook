@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { addContact } from 'redux/operations';
+import { selectContatcsList } from 'redux/selectors';
 
 import {
   AddContactWrapper,
@@ -10,7 +12,6 @@ import {
   FormInput,
   FormButtonSubmit,
 } from './AddContactFrom.styled';
-import { getContactsList } from 'redux/selectors';
 
 const INITIAL_STATE = {
   name: '',
@@ -24,7 +25,7 @@ function AddContactForm() {
   const [name, setName] = useState(INITIAL_STATE.name);
   const [number, setNumber] = useState(INITIAL_STATE.number);
   const dispatch = useDispatch();
-  const { contacts } = useSelector(getContactsList);
+  const { contacts } = useSelector(selectContatcsList);
 
   const handleSubmit = e => {
     e.preventDefault();
