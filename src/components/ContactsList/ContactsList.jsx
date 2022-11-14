@@ -50,6 +50,7 @@ const ContactsList = () => {
 
   return (
     <ContactsListStyled>
+      {error && <p>{error}</p>}
       {isLoading && <Loader />}
       {!isLoading && !error && contacts.map(mapCallback)}
     </ContactsListStyled>
