@@ -1,45 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { selectContatcsList, selectFilteredContacts } from 'redux/selectors';
-import { fetchContacts, deleteContact } from 'redux/operations';
+import { fetchContacts } from 'redux/operations';
 
+import Contact from 'components/Contact/Contact';
 import Loader from 'components/Loader/Loader';
-import {
-  ContactsListStyled,
-  ContactsItem,
-  ContactsButton,
-} from './ContactsList.styled';
+import { ContactsListStyled } from './ContactsList.styled';
 
 const ContactsList = () => {
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector(selectContatcsList);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const { error } = useSelector(selectContatcsList);
   const contacts = useSelector(selectFilteredContacts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const onDeleteBtnClick = id => {
-    dispatch(deleteContact(id));
-  };
+  useEffect(() => {
+    if (contacts.length !== 0) {
+      setIsInitialLoading(false);
+    }
+  }, [contacts]);
 
   const mapCallback = ({ name, phone, id }) => (
-    <ContactsItem key={id}>
-      {name}
-      <br />
-      {phone}
-      <ContactsButton onClick={() => onDeleteBtnClick(id)}>
-        Delete
-      </ContactsButton>
-    </ContactsItem>
+    <Contact name={name} phone={phone} id={id} key={id} />
   );
 
   return (
     <ContactsListStyled>
       {error && <p>{error}</p>}
-      {isLoading && <Loader />}
-      {!isLoading && !error && contacts.map(mapCallback)}
+      {isInitialLoading && <Loader />}
+      {!isInitialLoading && !error && contacts.map(mapCallback)}
     </ContactsListStyled>
   );
 };
